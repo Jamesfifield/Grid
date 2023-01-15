@@ -1,6 +1,7 @@
 import Grid from "./Grid";
 
 describe("Grid Data Structure", () => {
+  console.clear();
   //Test Contructor
   describe("constructor creates and sets correct row and column length", () => {
     const rowSize = 8;
@@ -67,4 +68,52 @@ describe("Grid Data Structure", () => {
       });
     });
   }); //END of Fill Method
+
+  //Test insert
+  describe("insert items into grid", () => {
+    const obj = { id: 1 };
+    const grid = new Grid<typeof obj>(3, 4);
+
+    grid.insert(obj, 2, 2);
+
+    it("inserted value into given column and row", () => {
+      expect(grid.getValueAt(0, 2)).not.toBe(obj);
+      expect(grid.getValueAt(2, 2)).toBe(obj);
+    });
+
+    it("value is in the correct row and column", () => {
+      const [row, col] = grid.indexOf(obj);
+
+      expect(row).toBe(2);
+      expect(col).toBe(2);
+    });
+  }); //END of getValueAt()
+
+  //Test getValueAt
+  describe("retreive values from the grid using getValueAt method", () => {
+    const grid = new Grid(3, 3);
+    grid.fill(false);
+    it("returns value given column and row", () => {
+      expect(grid.getValueAt(2, 2)).toBeFalsy();
+    });
+  }); //END of getValueAt()
+
+  //Test swap
+  describe("swap values in the grid", () => {
+    const grid = new Grid<{ id: number }>(6, 5);
+    //debugger;
+    grid.insert({ id: 2 }, 1, 1);
+    grid.insert({ id: 7 }, 3, 4);
+
+    //console.log(JSON.stringify(grid.toArray()));
+    console.log(grid.getValueAt(3, 4));
+
+    it("changes the position of two objects in the grid", () => {
+      expect(grid.getValueAt(1, 1).id).toBe(2);
+      expect(grid.getValueAt(3, 4).id).toBe(7);
+      grid.swap(1, 1, 3, 4);
+      expect(grid.getValueAt(1, 1).id).toBe(7);
+      expect(grid.getValueAt(3, 4).id).toBe(2);
+    });
+  }); //END of getValueAt()
 });

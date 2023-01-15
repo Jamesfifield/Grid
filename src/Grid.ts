@@ -10,7 +10,12 @@ export default class Grid<T> {
   constructor(columns: number, rows: number) {
     if (columns < 1 || rows < 1)
       throw new Error("Grid can not be smaller than 1x1");
-    this._grid = new Array(rows).fill(new Array(columns));
+    this._grid = new Array(rows);
+
+    for (let row = 0; row < rows; row++) {
+      this._grid[row] = new Array<T>(columns);
+    }
+
     this._cols = columns;
     this._rows = rows;
   }
@@ -39,9 +44,14 @@ export default class Grid<T> {
     return this._grid;
   }
 
-  getValueAt(columns: number, rows: number) {
+  insert(value: T, columns: number, rows: number) {
     this._withinGridBoundaries(columns, rows);
-    return this._grid[columns][rows];
+    this._grid[rows][columns] = value;
+  }
+
+  getValueAt(columns: number, rows: number) {
+    //this._withinGridBoundaries(columns, rows);
+    return this._grid[rows][columns];
   }
 
   isEmptyAt(columns: number, rows: number) {
@@ -62,6 +72,7 @@ export default class Grid<T> {
 
   indexOf(item: T) {
     let value = [-1, -1];
+
     for (let row = 0; row < this._grid.length; row++) {
       for (let col = 0; col < this._grid[row].length; col++) {
         if (this._grid[row][col] === item) {
@@ -78,11 +89,8 @@ export default class Grid<T> {
   }
 
   swap(column: number, row: number, withCol: number, withRow: number) {
-    if (
-      this._withinGridBoundaries(column, row) ||
-      this._withinGridBoundaries(withCol, withRow)
-    )
-      return;
+    this._withinGridBoundaries(column, row);
+    this._withinGridBoundaries(withCol, withRow);
 
     let temp = this._grid[row][column];
     this._grid[row][column] = this._grid[withRow][withCol];
